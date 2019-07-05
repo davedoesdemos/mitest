@@ -7,8 +7,7 @@
     }
   },
   "variables" {
-    "miservername": "[concat('sftp', uniqueString(resourceGroup().id))]"
-
+    "miservername": "[concat('mi', uniqueString(resourceGroup().id))]"
   },
   "resources": [
     {
@@ -37,6 +36,11 @@
       }
     },
     {
+      "type": "Microsoft.Sql/managedInstances",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "apiVersion": "2015-05-01-preview",
       "name": "[variables('miservername')]",
       "location": "[resourceGroup().location]",
       "sku": {
@@ -45,18 +49,11 @@
       "properties": {
         "administratorLogin": "demogod",
         "administratorLoginPassword": "[parameters('adminPassword')]",
-        "subnetId": {
-          "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'vnet01', 'subnet01')]"
-        },
+        "subnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'vnet01', 'subnet01')]",
         "storageSizeInGB": 256,
         "vCores": 16,
         "licenseType": "BasePrice"
-      },
-      "type": "Microsoft.Sql/managedInstances",
-      "identity": {
-        "type": "SystemAssigned"
-      },
-      "apiVersion": "2015-05-01-preview"
+      }
     }
   ]
 } 
