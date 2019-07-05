@@ -780,31 +780,29 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/routeTables','routeTable')]"
+          "[resourceId('Microsoft.Network/routeTables','routeTable')]"
       ],
-        "tags",
-        {
-          "displayName": "vnet01"
+      "tags": {
+        "displayName": "vnet01"
+      },
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "192.168.1.0/24"
+          ]
         },
-        "properties",
-        {
-          "addressSpace": {
-            "addressPrefixes": [
-              "192.168.1.0/24"
-            ]
-          },
-          "subnets": [
-            {
-              "name": "subnet01",
-              "properties": {
-                "addressPrefix": "192.168.1.0/24",
-                "routeTable": {
-                  "id": "[resourceId('Microsoft.Network/routeTables', 'routeTable')]"
-                }
+        "subnets": [
+          {
+            "name": "subnet01",
+            "properties": {
+              "addressPrefix": "192.168.1.0/24",
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', 'routeTable')]"
               }
             }
-          ]
-        }
+          }
+        ]
+      }
     }
   ]
 } 
