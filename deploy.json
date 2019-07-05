@@ -735,8 +735,13 @@
               "access": "Allow",
               "destinationAddressPrefix": "*",
               "destinationAddressPrefixes": [],
-              "destinationPortRange": "9000, 9003, 1438, 1440, 1452",
-              "destinationPortRanges": [],
+              "destinationPortRanges": [
+                "9000",
+                "9003",
+                "1438",
+                "1440",
+                "1452"
+              ],
               "direction": "Inbound",
               "priority": 300,
               "protocol": "Tcp",
@@ -752,8 +757,11 @@
               "access": "Allow",
               "destinationAddressPrefix": "*",
               "destinationAddressPrefixes": [],
-              "destinationPortRange": "80, 443, 12000",
-              "destinationPortRanges": [],
+              "destinationPortRanges": [
+                "80",
+                "443",
+                "12000"
+              ],
               "direction": "Outbound",
               "priority": 300,
               "protocol": "Tcp",
@@ -785,7 +793,10 @@
           {
             "name": "subnet01",
             "properties": {
-              "addressPrefix": "192.168.1.0/24"
+              "addressPrefix": "192.168.1.0/24",
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', 'routeTable')]"
+              }
             }
           }
         ]
