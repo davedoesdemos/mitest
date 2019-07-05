@@ -751,7 +751,7 @@
                 "1452"
               ],
               "direction": "Inbound",
-              "priority": 300,
+              "priority": 310,
               "protocol": "Tcp",
               "sourceAddressPrefix": "*",
               "sourceAddressPrefixes": [],
@@ -766,7 +766,7 @@
               "protocol": "*",
               "sourcePortRange": "*",
               "destinationPortRange": "*",
-              "sourceAddressPrefix": "[variables('addressPrefix')]",
+              "sourceAddressPrefix": "[variables('subnetPrefix')]",
               "destinationAddressPrefix": "*",
               "access": "Allow",
               "priority": 200,
@@ -795,7 +795,7 @@
               "sourcePortRange": "*",
               "destinationPortRange": "*",
               "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "[variables('addressPrefix')]",
+              "destinationAddressPrefix": "[variables('subnetPrefix')]",
               "access": "Allow",
               "priority": 200,
               "direction": "Outbound"
