@@ -7,7 +7,8 @@
     }
   },
   "variables": {
-    "miservername": "[concat('mi', uniqueString(resourceGroup().id))]"
+    "miservername": "[concat('mi', uniqueString(resourceGroup().id))]",
+    "subnetPrefix": "192.168.1.0/24"
   },
   "resources": [
     {
@@ -20,7 +21,7 @@
           {
             "name": "subnet_to_vnetlocal",
             "properties": {
-              "addressPrefix": "192.168.1.0/24",
+              "addressPrefix": "[variables('subnetPrefix')]",
               "nextHopType": "VnetLocal"
             }
           },
@@ -716,6 +717,13 @@
               "addressPrefix": "216.220.208.0/20",
               "nextHopType": "Internet"
             }
+          },
+          {
+            "name": "Internet",
+            "properties": {
+              "addressPrefix": "0.0.0.0/0",
+              "nextHopType": "Internet"
+            }
           }
         ],
         "disableBgpRoutePropagation": false
@@ -749,6 +757,62 @@
               "sourceAddressPrefixes": [],
               "sourcePortRange": "*",
               "sourcePortRanges": []
+            }
+          },
+          {
+            "name": "allow_misubnet_inbound",
+            "properties": {
+              "description": "Allow inbound traffic inside the subnet",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "sourceAddressPrefix": "[variables('addressPrefix')]",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 200,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "allow_health_probe_inbound",
+            "properties": {
+              "description": "Allow health probe",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "sourceAddressPrefix": "AzureLoadBalancer",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 300,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "allow_misubnet_outbound",
+            "properties": {
+              "description": "Allow outbound traffic inside the subnet",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "[variables('addressPrefix')]",
+              "access": "Allow",
+              "priority": 200,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "allow_tds_inbound",
+            "properties": {
+              "description": "Allow access to data",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "1433",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 1000,
+              "direction": "Inbound"
             }
           },
           {
@@ -789,14 +853,14 @@
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
-            "192.168.1.0/24"
+            "[variables('subnetPrefix')]"
           ]
         },
         "subnets": [
           {
             "name": "subnet01",
             "properties": {
-              "addressPrefix": "192.168.1.0/24",
+              "addressPrefix": "[variables('subnetPrefix')]",
               "routeTable": {
                 "id": "[resourceId('Microsoft.Network/routeTables', 'routeTable')]"
               },
