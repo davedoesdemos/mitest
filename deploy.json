@@ -780,7 +780,8 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
       "dependsOn": [
-          "[resourceId('Microsoft.Network/routeTables','routeTable')]"
+        "[resourceId('Microsoft.Network/routeTables','routeTable')]",
+        "[resourceId('Microsoft.Network/networkSecurityGroups','nsg01')]"
       ],
       "tags": {
         "displayName": "vnet01"
@@ -798,10 +799,36 @@
               "addressPrefix": "192.168.1.0/24",
               "routeTable": {
                 "id": "[resourceId('Microsoft.Network/routeTables', 'routeTable')]"
+              },
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups','nsg01')]"
               }
             }
           }
         ]
+      }
+    },
+    {
+      "type": "Microsoft.Sql/managedInstances",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks','vnet01')]"
+      ],
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "apiVersion": "2015-05-01-preview",
+      "name": "[variables('miservername')]",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "GP_Gen4"
+      },
+      "properties": {
+        "administratorLogin": "demogod",
+        "administratorLoginPassword": "[parameters('adminPassword')]",
+        "subnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'vnet01', 'subnet01')]",
+        "storageSizeInGB": 256,
+        "vCores": 16,
+        "licenseType": "BasePrice"
       }
     }
   ]
