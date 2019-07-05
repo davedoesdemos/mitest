@@ -779,28 +779,32 @@
       "type": "Microsoft.Network/virtualNetworks",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
-      "dependsOn": [],
-      "tags": {
-        "displayName": "vnet01"
-      },
-      "properties": {
-        "addressSpace": {
-          "addressPrefixes": [
-            "192.168.1.0/24"
-          ]
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/routeTables','routeTable')]"
+      ],
+        "tags",
+        {
+          "displayName": "vnet01"
         },
-        "subnets": [
-          {
-            "name": "subnet01",
-            "properties": {
-              "addressPrefix": "192.168.1.0/24",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', 'routeTable')]"
+        "properties",
+        {
+          "addressSpace": {
+            "addressPrefixes": [
+              "192.168.1.0/24"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "subnet01",
+              "properties": {
+                "addressPrefix": "192.168.1.0/24",
+                "routeTable": {
+                  "id": "[resourceId('Microsoft.Network/routeTables', 'routeTable')]"
+                }
               }
             }
-          }
-        ]
-      }
+          ]
+        }
     }
   ]
 } 
