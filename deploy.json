@@ -1,0 +1,62 @@
+{
+"$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+"contentVersion": "1.0.0.1",
+  "parameters": {
+    "adminPassword": {
+      "type": "securestring"
+    }
+  },
+  "variables" {
+    "miservername": "[concat('sftp', uniqueString(resourceGroup().id))]"
+
+  },
+  "resources": [
+    {
+      "name": "vnet01",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-03-30",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "vnet01"
+      },
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "192.168.1.0/24"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "subnet01",
+            "properties": {
+              "addressPrefix": "192.168.1.0/24"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[variables('miservername')]",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "GP_Gen4"
+      },
+      "properties": {
+        "administratorLogin": "demogod",
+        "administratorLoginPassword": "[parameters('adminPassword')]",
+        "subnetId": {
+          "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'vnet01', 'subnet01')]"
+        },
+        "storageSizeInGB": 256,
+        "vCores": 16,
+        "licenseType": "BasePrice"
+      },
+      "type": "Microsoft.Sql/managedInstances",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "apiVersion": "2015-05-01-preview"
+    }
+  ]
+} 
