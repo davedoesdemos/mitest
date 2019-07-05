@@ -6,10 +6,74 @@
       "type": "securestring"
     }
   },
-  "variables" {
+  "variables": {
     "miservername": "[concat('mi', uniqueString(resourceGroup().id))]"
   },
   "resources": [
+    {
+      "name": "routeTable",
+      "type": "Microsoft.Network/routeTables",
+      "apiVersion": "2018-11-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "routes": [
+          {
+            "name": "mi-13-64-11-nexthop-internet",
+            "id": "string",
+            "properties": {
+              "addressPrefix": "13.64.0.0/11",
+              "nextHopType": "Internet"
+            }
+          }
+        ],
+        "disableBgpRoutePropagation": false
+      },
+      "resources": []
+    },
+    {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2019-04-01",
+      "name": "nsg01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "management",
+            "properties": {
+              "access": "Allow",
+              "destinationAddressPrefix": "*",
+              "destinationAddressPrefixes": [],
+              "destinationPortRange": "9000, 9003, 1438, 1440, 1452",
+              "destinationPortRanges": [],
+              "direction": "Inbound",
+              "priority": 300,
+              "protocol": "Tcp",
+              "sourceAddressPrefix": "*",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            }
+          },
+          {
+            "name": "management",
+            "properties": {
+              "access": "Allow",
+              "destinationAddressPrefix": "*",
+              "destinationAddressPrefixes": [],
+              "destinationPortRange": "80, 443, 12000",
+              "destinationPortRanges": [],
+              "direction": "Outbound",
+              "priority": 300,
+              "protocol": "Tcp",
+              "sourceAddressPrefix": "*",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            }
+          }
+        ]
+      }
+    },
     {
       "name": "vnet01",
       "type": "Microsoft.Network/virtualNetworks",
@@ -33,26 +97,6 @@
             }
           }
         ]
-      }
-    },
-    {
-      "type": "Microsoft.Sql/managedInstances",
-      "identity": {
-        "type": "SystemAssigned"
-      },
-      "apiVersion": "2015-05-01-preview",
-      "name": "[variables('miservername')]",
-      "location": "[resourceGroup().location]",
-      "sku": {
-        "name": "GP_Gen4"
-      },
-      "properties": {
-        "administratorLogin": "demogod",
-        "administratorLoginPassword": "[parameters('adminPassword')]",
-        "subnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'vnet01', 'subnet01')]",
-        "storageSizeInGB": 256,
-        "vCores": 16,
-        "licenseType": "BasePrice"
       }
     }
   ]
