@@ -21,7 +21,7 @@
             "name": "subnet_to_vnetlocal",
             "properties": {
               "addressPrefix": "192.168.1.0/24",
-              "nextHopType": "Virtual Network"
+              "nextHopType": "VnetLocal"
             }
           },
           {
